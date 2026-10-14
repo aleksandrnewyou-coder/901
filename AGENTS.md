@@ -1,0 +1,1 @@
+- ИИ-аналитик (/analyst): только аналитика, сигналы не генерирует; контекст = выжимка локальной истории (src/lib/analyst/history-summary.ts, считается в браузере) + src/lib/analyst/backtest-context.gen.json (генерируется `npm run backtest:gen-analyst-context` из backtest/output) — чтобы полные отчёты не попадали в серверный бандл.
