@@ -41,3 +41,4 @@ backtest/.candle-cache/
 backtest/output/*.progress.json
 backtest/output-run/
 *.patch
+.env
