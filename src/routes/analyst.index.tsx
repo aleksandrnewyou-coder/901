@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { createThread, loadThreads } from "@/lib/analyst/threads";
 
 export const Route = createFileRoute("/analyst/")({
-  ssr: false,
   component: AnalystIndex,
 });
 

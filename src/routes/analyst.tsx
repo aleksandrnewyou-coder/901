@@ -5,17 +5,6 @@ import { createThread, deleteThread, loadThreads, type AnalystThread } from "@/l
 import logo from "@/assets/analyst-logo.png";
 
 export const Route = createFileRoute("/analyst")({
-  ssr: false,
-  head: () => ({
-    meta: [
-      { title: "ИИ-аналитик сигналов — Trading Terminal" },
-      { name: "description", content: "Вопросы к истории ваших сигналов: паттерны, сессии, индикаторы и сравнение с бэктестом." },
-      { property: "og:title", content: "ИИ-аналитик сигналов — Trading Terminal" },
-      { property: "og:description", content: "Разбор истории сигналов и эффективности стратегий с помощью ИИ." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
-  }),
   component: AnalystLayout,
 });
 
@@ -23,10 +12,10 @@ function useThreads() {
   const [threads, setThreads] = useState<AnalystThread[]>(() => loadThreads());
   useEffect(() => {
     const update = () => setThreads(loadThreads());
-    window.addEventListener("analyst-threads-changed", update);
+    window.addEventListener("analyst-thread-changed", update);
     window.addEventListener("storage", update);
     return () => {
-      window.removeEventListener("analyst-threads-changed", update);
+      window.removeEventListener("analyst-thread-changed", update);
       window.removeEventListener("storage", update);
     };
   }, []);

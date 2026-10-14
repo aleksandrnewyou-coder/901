@@ -11,17 +11,6 @@ import { comparisonCsv, downloadCsv, exportNames, hypothesesCsv, outcomesCsv } f
 import type { Signal } from "@/types/domain";
 
 export const Route = createFileRoute("/journal")({
-  ssr: false,
-  head: () => ({
-    meta: [
-      { title: "Журнал форвард-тестов — Trading Terminal" },
-      { name: "description", content: "Гипотезы аналитика, их проверка на новых сигналах и сравнение с бэктестом по периодам." },
-      { property: "og:title", content: "Журнал форвард-тестов — Trading Terminal" },
-      { property: "og:description", content: "Форвард-проверка гипотез и сравнение паттернов на разных отрезках времени." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
-  }),
   component: JournalPage,
 });
 

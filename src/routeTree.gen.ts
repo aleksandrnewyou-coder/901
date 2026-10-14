@@ -14,7 +14,6 @@ import { Route as AnalystRouteImport } from './routes/analyst'
 import { Route as JournalRouteImport } from './routes/journal'
 import { Route as AnalystIndexRouteImport } from './routes/analyst.index'
 import { Route as AnalystThreadIdRouteImport } from './routes/analyst.$threadId'
-import { Route as ApiAnalystRouteImport } from './routes/api/analyst'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -41,25 +40,18 @@ const AnalystThreadIdRoute = AnalystThreadIdRouteImport.update({
   path: '/$threadId',
   getParentRoute: () => AnalystRoute,
 } as any)
-const ApiAnalystRoute = ApiAnalystRouteImport.update({
-  id: '/api/analyst',
-  path: '/api/analyst',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analyst': typeof AnalystRouteWithChildren
   '/journal': typeof JournalRoute
   '/analyst/$threadId': typeof AnalystThreadIdRoute
-  '/api/analyst': typeof ApiAnalystRoute
   '/analyst/': typeof AnalystIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/journal': typeof JournalRoute
   '/analyst/$threadId': typeof AnalystThreadIdRoute
-  '/api/analyst': typeof ApiAnalystRoute
   '/analyst': typeof AnalystIndexRoute
 }
 export interface FileRoutesById {
@@ -68,27 +60,19 @@ export interface FileRoutesById {
   '/analyst': typeof AnalystRouteWithChildren
   '/journal': typeof JournalRoute
   '/analyst/$threadId': typeof AnalystThreadIdRoute
-  '/api/analyst': typeof ApiAnalystRoute
   '/analyst/': typeof AnalystIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/analyst'
-    | '/journal'
-    | '/analyst/$threadId'
-    | '/api/analyst'
-    | '/analyst/'
+  fullPaths: '/' | '/analyst' | '/journal' | '/analyst/$threadId' | '/analyst/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/journal' | '/analyst/$threadId' | '/api/analyst' | '/analyst'
+  to: '/' | '/journal' | '/analyst/$threadId' | '/analyst'
   id:
     | '__root__'
     | '/'
     | '/analyst'
     | '/journal'
     | '/analyst/$threadId'
-    | '/api/analyst'
     | '/analyst/'
   fileRoutesById: FileRoutesById
 }
@@ -96,7 +80,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalystRoute: typeof AnalystRouteWithChildren
   JournalRoute: typeof JournalRoute
-  ApiAnalystRoute: typeof ApiAnalystRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -136,13 +119,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnalystThreadIdRouteImport
       parentRoute: typeof AnalystRoute
     }
-    '/api/analyst': {
-      id: '/api/analyst'
-      path: '/api/analyst'
-      fullPath: '/api/analyst'
-      preLoaderRoute: typeof ApiAnalystRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -163,18 +139,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalystRoute: AnalystRouteWithChildren,
   JournalRoute: JournalRoute,
-  ApiAnalystRoute: ApiAnalystRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
