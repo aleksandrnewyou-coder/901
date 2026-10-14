@@ -92,10 +92,13 @@ export function detectConsolidationBreakout(
     confidence,
     strength: strengthForConfidence(confidence),
     time: last.time,
-    // Честно, а не безусловный true — как и в impulse-breakout.ts: бонус
-    // за подтверждённый объём (+0.1 в applyConfidenceHierarchy()) не должен
-    // начисляться, когда фильтр был просто пропущен из-за отсутствия
-    // данных, а не пройден по факту.
-    volumeConfirmed: volumeReliable,
+    // Бонус за подтверждённый объём (+0.1 в applyConfidenceHierarchy())
+    // начисляется только когда объём реально подтвердил пробой (volRatio >=
+    // MIN_VOLUME_RATIO), а не просто когда данные об объёме существуют.
+    // Если volumeReliable=false (фильтр пропущен) — бонус не начисляется
+    // (как и в impulse-breakout.ts). Аудит 2026-10-14: раньше было
+    // `volumeReliable`, что давало бонус за любое наличие данных, даже если
+    // volRatio лишь чуть превысил MIN_VOLUME_RATIO (1.5).
+    volumeConfirmed: volumeReliable && volRatio !== null && volRatio >= MIN_VOLUME_RATIO,
   };
 }

@@ -110,12 +110,12 @@ function confluenceList(filters: MultiFactorFilters): string[] {
 function rsiZoneFactorForContinuation(direction: SignalDirection, rsi: number | null): number {
   if (rsi == null) return 1.0; // нет данных — не штрафуем и не поощряем
   if (direction === 'buy') {
-    if (rsi > 70) return 1.10;
-    if (rsi > 50) return 1.00; // 50 < rsi <= 70
+    if (rsi > 70) return 1.00; // overbought — neutral, not a continuation boost
+    if (rsi > 50) return 1.10; // strong but not extreme — continuation zone
     return 0.70;
   }
-  if (rsi < 30) return 1.10;
-  if (rsi < 50) return 1.00; // 30 <= rsi < 50
+  if (rsi < 30) return 1.00; // oversold — neutral, not a continuation boost
+  if (rsi < 50) return 1.10; // strong but not extreme — continuation zone
   return 0.70;
 }
 

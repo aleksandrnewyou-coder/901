@@ -273,7 +273,7 @@ export function detectAllPatterns(
   // поэтому индекс сдвинут на length-1, как у Marubozu.
   if (has('hammer')) { const p = detectHammer(ctx); if (p) raw.push(p); }
   if (has('doji')) { const p = detectDoji({ ...ctx, index: candles.length - 1 }); if (p) raw.push(p); }
-  if (has('spinning-top')) { const p = detectSpinningTop(last); if (p) raw.push(p); }
+  if (has('spinning-top')) { const p = detectSpinningTop({ ...ctx, index: candles.length - 1 }); if (p) raw.push(p); }
 
   // Double-bar patterns (context-aware) — BUGFIX (аудит 2026-09-12): Harami
   // раньше вызывался как detectBullishHarami(prev, last) вообще без

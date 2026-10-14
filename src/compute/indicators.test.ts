@@ -152,8 +152,10 @@ describe('atr', () => {
   it('computes a positive value after warmup', () => {
     const candles = makeCandles(30, 100);
     const result = atr(candles, 14);
-    expect(result[13]).not.toBeNull();
-    expect(result[13]! > 0).toBe(true);
+    // Wilder convention: first ATR at index `period` (14), not `period - 1`,
+    // since TR[0] is excluded from the seed sum (no previous close).
+    expect(result[14]).not.toBeNull();
+    expect(result[14]! > 0).toBe(true);
   });
 });
 

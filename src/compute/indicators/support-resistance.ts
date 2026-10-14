@@ -33,8 +33,8 @@ export function supportResistance(
   const lastClose = candles[candles.length - 1].close;
 
   for (const level of all) {
-    level.strength = computeStrength(level, lastClose, atrValue);
     level.isPsychological = isPsychologicalLevel(level.price);
+    level.strength = computeStrength(level, lastClose, atrValue);
   }
 
   return all.sort((a, b) => b.strength - a.strength);

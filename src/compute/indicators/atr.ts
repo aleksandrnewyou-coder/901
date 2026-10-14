@@ -23,12 +23,15 @@ export function atr(candles: Candle[], period: number): (number | null)[] {
   const result = nullArray(candles.length);
   if (candles.length <= period) return result;
 
+  // Wilder convention: seed sums TR from index 1 (not 0), since TR[0] has no
+  // previous close and uses high-low as a fallback — including it biases the
+  // first ATR value. Consistent with adx.ts which also seeds from tr[1].
   let sum = 0;
-  for (let i = 0; i < period; i++) sum += tr[i];
+  for (let i = 1; i <= period; i++) sum += tr[i];
   let prev = sum / period;
-  result[period - 1] = prev;
+  result[period] = prev;
 
-  for (let i = period; i < candles.length; i++) {
+  for (let i = period + 1; i < candles.length; i++) {
     prev = (prev * (period - 1) + tr[i]) / period;
     result[i] = prev;
   }

@@ -547,7 +547,15 @@ export function detectMarubozuBearish(ctx: PatternContext): PatternResult | null
   };
 }
 
-export function detectSpinningTop(cur: Candle): PatternResult | null {
+// Spinning Top — context-aware (аудит 2026-10-14): тот же класс бага, что
+// был исправлен у Doji (см. комментарий выше): направление бралось из цвета
+// микроскопического тела (close >= open), что для свечи с body/range < 0.3 —
+// шум округления, не сигнал. Как и Doji, spinning top — свеча нерешительности
+// с собственным направлением чуть большего тела (но всё ещё малым); разворотный
+// смысл появляется только в контексте предшествующего тренда.
+export function detectSpinningTop(ctx: PatternContext): PatternResult | null {
+  const { candles, index, structure, session } = ctx;
+  const cur = candles[index];
   const body = Math.abs(cur.close - cur.open);
   const range = cur.high - cur.low || 1e-9;
   if (range <= 0) return null;
@@ -557,7 +565,14 @@ export function detectSpinningTop(cur: Candle): PatternResult | null {
   const upperWick = cur.high - Math.max(cur.close, cur.open);
   const lowerWick = Math.min(cur.close, cur.open) - cur.low;
   if (Math.abs(upperWick - lowerWick) > body * 1.5) return null;
-  const direction = cur.close >= cur.open ? 'buy' : 'sell';
+
+  if (isAsiaOrClosed(session, ctx.sessionAgnostic)) return null;
+
+  const downTrend = hasPrecedingBearish(candles, index, 5) || structure.trend === 'down';
+  const upTrend = hasPrecedingBullish(candles, index, 5) || structure.trend === 'up';
+  if (downTrend === upTrend) return null;
+
+  const direction = downTrend ? 'buy' : 'sell';
   const confidence = 0.25;
   return {
     name: 'spinning-top',
